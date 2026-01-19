@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"log"
 	"net/http"
 
+	"github.com/TonChan8028/go-realtime-chat/internal/hub"
 	"github.com/gorilla/websocket"
 )
 
@@ -13,26 +13,21 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
+var h = hub.NewHub()
+
+func init() {
+	go h.Run()
+}
+
 func WebSocketEcho(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Println("upgrade error:", err)
 		return
 	}
-	defer conn.Close()
 
-	for {
-		// message受信
-		msgType, msg, err := conn.ReadMessage()
-		if err != nil {
-			log.Println("read error:", err)
-			break
-		}
+	client := hub.NewClient(h, conn)
+	h.Register(client)
 
-		// message送信
-		if err := conn.WriteMessage(msgType, msg); err != nil {
-			log.Println("write error:", err)
-			break
-		}
-	}
+	go client.WritePump()
+	go client.ReadPump()
 }
