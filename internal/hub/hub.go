@@ -1,6 +1,11 @@
 package hub
 
-import "go-realtime-chat/internal/model"
+import (
+	"go-realtime-chat/internal/model"
+	"time"
+
+	"github.com/TonChan8028/go-realtime-chat/internal/model"
+)
 
 type Hub struct {
 	clients    map[*Client]bool
@@ -45,10 +50,24 @@ func (h *Hub) Run() {
 
 func (h *Hub) Register(client *Client) {
 	h.register <- client
+
+	h.broadcast <- model.Message{
+		Type:      model.MessageTypeJoin,
+		Username:  client.username,
+		Content:   "joined",
+		Timestamp: time.Now(),
+	}
 }
 
 func (h *Hub) Unregister(client *Client) {
 	h.unregister <- client
+
+	h.broadcast <- model.Message{
+		Type:      model.MMessageTypeLeave,
+		Username:  client.username,
+		Content:   "left",
+		Timestamp: time.Now(),
+	}
 }
 
 func (h *Hub) Broadcast(msg model.Message) {

@@ -2,22 +2,25 @@ package hub
 
 import (
 	"log"
+	"time"
 
 	"github.com/TonChan8028/go-realtime-chat/internal/model"
 	"github.com/gorilla/websocket"
 )
 
 type Client struct {
-	hub  *Hub
-	conn *websocket.Conn
-	send chan model.Message
+	hub      *Hub
+	conn     *websocket.Conn
+	send     chan model.Message
+	username string
 }
 
-func NewClient(hub *Hub, conn *websocket.Conn) *Client {
+func NewClient(hub *Hub, conn *websocket.Conn, username string) *Client {
 	return &Client{
-		hub:  hub,
-		conn: conn,
-		send: make(chan model.Message),
+		hub:      hub,
+		conn:     conn,
+		send:     make(chan model.Message),
+		username: username,
 	}
 }
 
@@ -33,7 +36,11 @@ func (c *Client) ReadPump() {
 			log.Println("read error:", err)
 			break
 		}
-		c.hub.broadcast <- msg
+		msg.Type = model.MessageTypeMessage
+		msg.Username = c.username
+		msg.Timestamp = time.Now()
+
+		c.hub.Broadcast(msg)
 	}
 }
 
