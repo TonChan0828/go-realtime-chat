@@ -1,7 +1,6 @@
 package hub
 
 import (
-	"go-realtime-chat/internal/model"
 	"time"
 
 	"github.com/TonChan8028/go-realtime-chat/internal/model"

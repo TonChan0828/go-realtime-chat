@@ -30,7 +30,7 @@ func WebSocketEcho(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client := hub.NewClient(h, conn)
+	client := hub.NewClient(h, conn, username)
 	h.Register(client)
 
 	go client.WritePump()

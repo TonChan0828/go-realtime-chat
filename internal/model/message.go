@@ -12,8 +12,8 @@ const (
 )
 
 type Message struct {
-	Type      MessageType `json: "type"`
-	Username  string      `json: "username"`
-	Content   string      `json: "content"`
-	Timestamp time.Time   `json: "timestamp"`
+	Type      MessageType `json:"type"`
+	Username  string      `json:"username"`
+	Content   string      `json:"content"`
+	Timestamp time.Time   `json:"timestamp"`
 }
