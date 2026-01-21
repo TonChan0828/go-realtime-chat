@@ -1,29 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
     <title>WebSocket Chat</title>
 </head>
+
 <body>
-    <input id="input" type="text"/>
-    <button onclick="send()">Send</button>
+    <input id="input" type="text" />
+    <button id="sendBtn">Send</button>
     <pre id="log"></pre>
 
-    <script>
-        const log =document.getElementById("log")
-        const ws =new WebSocket("ws://localhost:8080/ws")
-
-        ws.onmessage=(event)=>{
-            log.textContent+="echo:" + event.data + "\n";
-        };
-
-        function send(){
-            const input =document.getElementById("input");
-            ws.send(input.value);
-            input.value="";
-        }
-    </script>
-    
+    <script src="./app.js"></script>
 </body>
+
 </html>
