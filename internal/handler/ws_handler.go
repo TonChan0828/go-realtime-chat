@@ -13,11 +13,7 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-var h = hub.NewHub()
-
-func init() {
-	go h.Run()
-}
+var roomManager = hub.NewRoomManager()
 
 func WebSocketEcho(w http.ResponseWriter, r *http.Request) {
 	username := r.URL.Query().Get("username")
@@ -25,11 +21,17 @@ func WebSocketEcho(w http.ResponseWriter, r *http.Request) {
 		username = "anonymous"
 	}
 
+	room := r.URL.Query().Get("room")
+	if room == "" {
+		room = "general"
+	}
+
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		return
 	}
 
+	h := roomManager.GetRoom(room)
 	client := hub.NewClient(h, conn, username)
 	h.Register(client)
 
