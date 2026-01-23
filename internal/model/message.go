@@ -6,7 +6,7 @@ type MessageType string
 
 const (
 	MessageTypeJoin    MessageType = "join"
-	MMessageTypeLeave  MessageType = "leave"
+	MessageTypeLeave   MessageType = "leave"
 	MessageTypeMessage MessageType = "message"
 	MessageTypeSystem  MessageType = "system"
 )

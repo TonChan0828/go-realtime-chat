@@ -62,7 +62,7 @@ func (h *Hub) Unregister(client *Client) {
 	h.unregister <- client
 
 	h.broadcast <- model.Message{
-		Type:      model.MMessageTypeLeave,
+		Type:      model.MessageTypeLeave,
 		Username:  client.username,
 		Content:   "left",
 		Timestamp: time.Now(),
