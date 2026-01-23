@@ -19,14 +19,14 @@ func NewClient(hub *Hub, conn *websocket.Conn, username string) *Client {
 	return &Client{
 		hub:      hub,
 		conn:     conn,
-		send:     make(chan model.Message),
+		send:     make(chan model.Message, 64),
 		username: username,
 	}
 }
 
 func (c *Client) ReadPump() {
 	defer func() {
-		c.hub.unregister <- c
+		c.hub.Unregister(c)
 		c.conn.Close()
 	}()
 
