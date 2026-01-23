@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/TonChan8028/go-realtime-chat/internal/hub"
@@ -15,7 +16,7 @@ var upgrader = websocket.Upgrader{
 
 var roomManager = hub.NewRoomManager()
 
-func WebSocketEcho(w http.ResponseWriter, r *http.Request) {
+func WebSocketHandler(w http.ResponseWriter, r *http.Request) {
 	username := r.URL.Query().Get("username")
 	if username == "" {
 		username = "anonymous"
@@ -31,10 +32,16 @@ func WebSocketEcho(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h := roomManager.GetRoom(room)
+	h := roomManager.GetRoom(appCtx, room)
 	client := hub.NewClient(h, conn, username)
 	h.Register(client)
 
 	go client.WritePump()
 	go client.ReadPump()
+}
+
+var appCtx context.Context
+
+func SetAppContext(ctx context.Context) {
+	appCtx = ctx
 }

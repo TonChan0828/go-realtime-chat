@@ -1,6 +1,9 @@
 package hub
 
-import "sync"
+import (
+	"context"
+	"sync"
+)
 
 type RoomManager struct {
 	mu    sync.Mutex
@@ -13,7 +16,7 @@ func NewRoomManager() *RoomManager {
 	}
 }
 
-func (rm *RoomManager) GetRoom(name string) *Hub {
+func (rm *RoomManager) GetRoom(ctx context.Context, name string) *Hub {
 	rm.mu.Lock()
 	defer rm.mu.Unlock()
 
@@ -23,7 +26,7 @@ func (rm *RoomManager) GetRoom(name string) *Hub {
 
 	hub := NewHub()
 	rm.rooms[name] = hub
-	go hub.Run()
+	go hub.Run(ctx)
 
 	return hub
 }

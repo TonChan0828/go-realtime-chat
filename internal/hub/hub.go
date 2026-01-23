@@ -1,6 +1,7 @@
 package hub
 
 import (
+	"context"
 	"time"
 
 	"github.com/TonChan8028/go-realtime-chat/internal/model"
@@ -22,9 +23,15 @@ func NewHub() *Hub {
 	}
 }
 
-func (h *Hub) Run() {
+func (h *Hub) Run(ctx context.Context) {
 	for {
 		select {
+		case <-ctx.Done():
+			for client := range h.clients {
+				close(client.send)
+			}
+			return
+
 		case client := <-h.register:
 			h.clients[client] = true
 
