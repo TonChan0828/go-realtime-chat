@@ -9,6 +9,34 @@ Go + WebSocket で動くシンプルなリアルタイムチャットのサン�
 - Ping/Pong と deadline 設定で接続維持
 - Context と OS シグナルで graceful shutdown
 
+## 現在の構成と使用方法
+構成:
+- サーバ: Go + Gorilla WebSocket（`/ws` エンドポイント）
+- クライアント: `web/index.html` + `web/app.js`（最小構成の HTML/JS）
+
+使い方:
+1) サーバ起動
+```bash
+go run ./cmd/server
+```
+2) ブラウザでアクセス（`username` と `room` を指定）
+```
+http://localhost:8080/?username=alice&room=general
+```
+3) 別タブで `username` / `room` を変えて開くと、同一ルーム内でブロードキャストされます。
+
+接続先 WebSocket:
+```
+ws://localhost:8080/ws?username={name}&room={room}
+```
+
+## 機能
+- ルーム単位のメッセージブロードキャスト
+- 参加/退出イベントの配信（`join` / `leave`）
+- メッセージ送受信（JSON）
+- 再接続リトライ（指数バックオフ上限あり）
+- Ping/Pong と deadline による接続維持
+
 ## 起動方法
 ```bash
 go run ./cmd/server
