@@ -17,7 +17,7 @@ Go + WebSocket で動くシンプルなリアルタイムチャットのサン�
 使い方:
 1) サーバ起動
 ```bash
-go run ./cmd/server
+go run ./cmd/server/main.go
 ```
 2) ブラウザでアクセス（`username` と `room` を指定）
 ```
@@ -39,7 +39,7 @@ ws://localhost:8080/ws?username={name}&room={room}
 
 ## 起動方法
 ```bash
-go run ./cmd/server
+go run ./cmd/server/main.go
 ```
 
 ブラウザで以下にアクセスします。
